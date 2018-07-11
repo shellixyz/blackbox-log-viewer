@@ -254,20 +254,14 @@ function FlightLog(logData) {
             sysConfig = that.getSysConfig(),
             found = false;
 
-        var refVoltage;
-        if((sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(sysConfig.firmwareVersion, '3.1.0')) || 
-           (sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(sysConfig.firmwareVersion, '2.0.0'))) {
-            refVoltage = sysConfig.vbatref;
-        } else {
-            refVoltage = that.vbatADCToMillivolts(sysConfig.vbatref) / 100;
-        }
+        var refVoltage = sysConfig.vbatref;
 
         //Are we even logging VBAT?
         if (!fieldNameToIndex.vbatLatest) {
             numCells = false;
         } else {
             for (i = 1; i < 8; i++) {
-                if (refVoltage < i * sysConfig.vbatmaxcellvoltage)
+                if (refVoltage < i * (sysConfig.vbatmaxcellvoltage + 30))
                     break;
             }
 
